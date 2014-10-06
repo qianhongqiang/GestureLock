@@ -25,6 +25,8 @@
 @property (nonatomic, assign) CGPoint currentpoint;
 
 @property (nonatomic ,assign) GLLockViewState state;
+
+@property (nonatomic ,assign) GLLockLoginState loginstate;
 /*
  *用于验证拼接
  */
@@ -50,6 +52,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         self.state = state;
+        self.loginstate = GLLockLoginStateSuccess;
         self.btnArray = [NSMutableArray array];
         self.btnselectedArray = [NSMutableArray array];
         self.currentpoint = CGPointZero;
@@ -92,6 +95,7 @@
     switch (pan.state) {
         case UIGestureRecognizerStateBegan:
         {
+            self.loginstate = GLLockLoginStateSuccess;
             [self.btnselectedArray removeAllObjects];
             CGPoint location;
             location = [pan locationInView:self];
@@ -141,19 +145,30 @@
                     [resultString appendString:[NSString stringWithFormat:@"%i",btn.tag]];
                 }
                 
-                self.currentpoint = CGPointZero;
-                [self.btnselectedArray removeAllObjects];
-                for (GLLockButton *btn in self.btnArray) {
-                    btn.selected = NO;
-                }
-                [self setNeedsDisplay];
-                
                 if (self.state == GLLockViewStateAuthen) {
                     [self authen:resultString];
                 }else if(self.state == GLLockViewStateAdd)
                 {
                     [self addPassword:resultString];
                 }
+                if (self.loginstate == GLLockLoginStateSuccess) {
+                    self.currentpoint = CGPointZero;
+                    [self.btnselectedArray removeAllObjects];
+                    for (GLLockButton *btn in self.btnArray) {
+                        btn.selected = NO;
+                    }
+                    [self setNeedsDisplay];
+                } else{
+                    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                        self.currentpoint = CGPointZero;
+                        [self.btnselectedArray removeAllObjects];
+                        for (GLLockButton *btn in self.btnArray) {
+                            btn.selected = NO;
+                        }
+                        [self setNeedsDisplay];
+                    });
+                }
+                
             }
         }
             break;
@@ -176,6 +191,9 @@
         } completion:^(BOOL finished) {
             [self removeFromSuperview];
         }];
+    }else{
+        self.loginstate = GLLockLoginStateFailure;
+        [self setNeedsDisplay];
     }
 }
 
@@ -226,8 +244,12 @@
 - (void)drawRect:(CGRect)rect
 {
     CGContextRef ctx = UIGraphicsGetCurrentContext();
-    CGContextSetRGBStrokeColor(ctx, 102/255.f, 145/255.f, 254/255.f, 1);
     CGContextSetLineWidth(ctx,4);
+    if (self.loginstate == GLLockLoginStateSuccess) {
+        CGContextSetRGBStrokeColor(ctx, 102/255.f, 145/255.f, 254/255.f, 1);
+    } else{
+        CGContextSetRGBStrokeColor(ctx, 255/255.f, 0/255.f, 0/255.f, 1);
+    }
     CGContextSetLineJoin(ctx, kCGLineJoinRound);
     for (int index = 0; index < self.btnselectedArray.count; index++) {
         if (index == 0) {

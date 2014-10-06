@@ -27,7 +27,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    GLLockView *lockView = [[GLLockView alloc] initWithFrame:self.view.bounds PasswordSata:GLLockViewStateAdd];
+    GLLockView *lockView = [[GLLockView alloc] initWithFrame:self.view.bounds PasswordSata:GLLockViewStateAuthen];
     [self.view addSubview:lockView];
     
 }

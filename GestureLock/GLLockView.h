@@ -20,6 +20,12 @@ typedef NS_ENUM(NSInteger, GLLockViewState) {
      */
 };
 
+typedef NS_ENUM(NSInteger, GLLockLoginState) {
+    GLLockLoginStateSuccess,
+    
+    GLLockLoginStateFailure
+};
+
 /*
  *通过不同的模式初始化
  */
