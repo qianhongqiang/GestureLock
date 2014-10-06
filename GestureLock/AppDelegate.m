@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "GLViewController.h"
 
 @implementation AppDelegate
 
@@ -15,9 +16,13 @@
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     // Override point for customization after application launch.
     self.window.backgroundColor = [UIColor whiteColor];
+    
+    //添加跟控制器
+    self.window.rootViewController = [[GLViewController alloc] init];
     [self.window makeKeyAndVisible];
     return YES;
 }
+
 
 - (void)applicationWillResignActive:(UIApplication *)application
 {
