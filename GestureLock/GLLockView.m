@@ -7,7 +7,6 @@
 //
 
 #import "GLLockView.h"
-#import "GLLockButton.h"
 
 #define padding 20
 @interface GLLockView()
@@ -142,7 +141,7 @@
             if (self.btnselectedArray.count > 0) {
                 NSMutableString * resultString=[NSMutableString string];
                 for ( GLLockButton *btn  in self.btnselectedArray){
-                    [resultString appendString:[NSString stringWithFormat:@"%i",btn.tag]];
+                    [resultString appendString:[NSString stringWithFormat:@"%li",(long)btn.tag]];
                 }
                 
                 if (self.state == GLLockViewStateAuthen) {
@@ -186,6 +185,9 @@
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
     NSString *passwordstored = [defaults objectForKey:@"password"];
     if ([passWord isEqualToString: passwordstored]) {
+        if (self.athenGestureCallBackBlock) {
+            self.athenGestureCallBackBlock(passWord);
+        }
         [UIView animateWithDuration:1 animations:^{
             self.alpha = 0;
         } completion:^(BOOL finished) {
@@ -211,6 +213,7 @@
             [UIView animateWithDuration:0.5 delay:1 options:0 animations:^{
                 self.alertLabel.alpha = 0;
             } completion:^(BOOL finished) {
+                
                 
             }];
         }];
@@ -268,6 +271,20 @@
     }
     CGContextStrokePath(ctx);
     
+}
+
+@end
+
+@implementation GLLockButton
+
+- (id)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        [self setImage:[UIImage imageNamed:@"passwordbtn_selected"] forState:UIControlStateSelected];
+        [self setImage:[UIImage imageNamed:@"passwordbtn_normal"] forState:UIControlStateNormal];
+    }
+    return self;
 }
 
 @end

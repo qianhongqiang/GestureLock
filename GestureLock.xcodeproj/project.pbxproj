@@ -21,7 +21,6 @@
 		7FFC8B9819E22276005CFCC1 /* GestureLockTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FFC8B9719E22276005CFCC1 /* GestureLockTests.m */; };
 		7FFC8BA419E222F4005CFCC1 /* GLViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FFC8BA319E222F4005CFCC1 /* GLViewController.m */; };
 		7FFC8BA719E223EA005CFCC1 /* GLLockView.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FFC8BA619E223EA005CFCC1 /* GLLockView.m */; };
-		7FFC8BAA19E22406005CFCC1 /* GLLockButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 7FFC8BA919E22406005CFCC1 /* GLLockButton.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,8 +54,6 @@
 		7FFC8BA319E222F4005CFCC1 /* GLViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLViewController.m; sourceTree = "<group>"; };
 		7FFC8BA519E223EA005CFCC1 /* GLLockView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLLockView.h; sourceTree = "<group>"; };
 		7FFC8BA619E223EA005CFCC1 /* GLLockView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLLockView.m; sourceTree = "<group>"; };
-		7FFC8BA819E22406005CFCC1 /* GLLockButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GLLockButton.h; path = ../GLLockButton.h; sourceTree = "<group>"; };
-		7FFC8BA919E22406005CFCC1 /* GLLockButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GLLockButton.m; path = ../GLLockButton.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -159,8 +156,6 @@
 		7FFC8BA119E22296005CFCC1 /* GestureLock */ = {
 			isa = PBXGroup;
 			children = (
-				7FFC8BA819E22406005CFCC1 /* GLLockButton.h */,
-				7FFC8BA919E22406005CFCC1 /* GLLockButton.m */,
 				7FFC8BA519E223EA005CFCC1 /* GLLockView.h */,
 				7FFC8BA619E223EA005CFCC1 /* GLLockView.m */,
 			);
@@ -265,7 +260,6 @@
 				7FFC8B8319E22276005CFCC1 /* AppDelegate.m in Sources */,
 				7FFC8BA419E222F4005CFCC1 /* GLViewController.m in Sources */,
 				7FFC8BA719E223EA005CFCC1 /* GLLockView.m in Sources */,
-				7FFC8BAA19E22406005CFCC1 /* GLLockButton.m in Sources */,
 				7FFC8B7F19E22276005CFCC1 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -463,6 +457,7 @@
 				7FFC8B9D19E22276005CFCC1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		7FFC8B9E19E22276005CFCC1 /* Build configuration list for PBXNativeTarget "GestureLockTests" */ = {
 			isa = XCConfigurationList;
@@ -471,6 +466,7 @@
 				7FFC8BA019E22276005CFCC1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

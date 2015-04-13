@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
+typedef void(^addGestureCallBack)(NSString *gesPsd);
+typedef void(^athenGestureCallBack)(NSString *gesPsd);
+
 @interface GLLockView : UIView
 
 typedef NS_ENUM(NSInteger, GLLockViewState) {
@@ -30,5 +33,15 @@ typedef NS_ENUM(NSInteger, GLLockLoginState) {
  *通过不同的模式初始化
  */
 - (id)initWithFrame:(CGRect)frame PasswordSata:(GLLockViewState)state;
+
+@property (nonatomic, copy) addGestureCallBack addGestureCallBackBlock;
+@property (nonatomic, copy) athenGestureCallBack athenGestureCallBackBlock;
+
+@end
+
+/**
+ *  解锁界面的按钮
+ */
+@interface GLLockButton : UIButton
 
 @end
