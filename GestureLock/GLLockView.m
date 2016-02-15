@@ -281,10 +281,41 @@
 {
     self = [super initWithFrame:frame];
     if (self) {
-        [self setImage:[UIImage imageNamed:@"passwordbtn_selected"] forState:UIControlStateSelected];
-        [self setImage:[UIImage imageNamed:@"passwordbtn_normal"] forState:UIControlStateNormal];
+        [self setupUI];
     }
     return self;
+}
+
+- (void)setupUI {
+    UIImage *(^normalImage)() = ^UIImage *{
+        UIGraphicsBeginImageContextWithOptions(self.frame.size, NO, [UIScreen mainScreen].scale);
+        CGContextRef ctx = UIGraphicsGetCurrentContext();
+        CGContextSetStrokeColorWithColor(ctx, [UIColor blueColor].CGColor);
+        CGContextSetLineWidth(ctx, 2);
+        CGContextAddEllipseInRect(ctx, self.bounds);
+        CGContextStrokePath(ctx);
+        UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        return newImage;
+    };
+    
+    UIImage *(^selectedImage)() = ^UIImage *{
+        UIGraphicsBeginImageContextWithOptions(self.frame.size, NO, [UIScreen mainScreen].scale);
+        CGContextRef ctx = UIGraphicsGetCurrentContext();
+        CGContextSetStrokeColorWithColor(ctx, [UIColor blueColor].CGColor);
+        CGContextSetLineWidth(ctx, 2);
+        CGContextAddEllipseInRect(ctx, self.bounds);
+        CGContextStrokePath(ctx);
+        CGContextSetFillColorWithColor(ctx, [UIColor blueColor].CGColor);
+        CGContextAddEllipseInRect(ctx, CGRectMake(self.bounds.size.width * 0.3, self.bounds.size.height * 0.3, self.bounds.size.width * 0.4, self.bounds.size.height * 0.4));
+        CGContextFillPath(ctx);
+        UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+        return newImage;
+    };
+    
+    [self setImage:selectedImage() forState:UIControlStateSelected];
+    [self setImage:normalImage() forState:UIControlStateNormal];
 }
 
 @end
