@@ -24,8 +24,6 @@
  */
 @property (nonatomic, assign) CGPoint currentpoint;
 
-@property (nonatomic ,assign) GLLockViewState state;
-
 @property (nonatomic ,assign) GLLockLoginState loginstate;
 /*
  *用于验证拼接
@@ -34,9 +32,13 @@
 /*
  *提醒框
  */
-@property (nonatomic, weak) UILabel *alertLabel;
+@property (nonatomic, strong) UILabel *alertLabel;
 
 @property (nonatomic, strong) GLLockConfig *config;
+
+@property (nonatomic, copy) settingGestureSuccessCallBack settingGestureCallBackBlock;
+@property (nonatomic, copy) athenGestureCallBack athenGestureCallBackBlock;
+
 
 @end
 
@@ -44,7 +46,7 @@
 @implementation GLLockView
 
 
--(instancetype)initWithFrame:(CGRect)frame config:(GLLockConfig *)config
+-(instancetype)initWithFrame:(CGRect)frame config:(GLLockConfig *)config settingPasswordSuccess:(settingGestureSuccessCallBack)settingSuccess athenSuccess:(athenGestureCallBack)athenSuccess
 {
     if (self = [super initWithFrame:frame]) {
         _config = config;
@@ -52,6 +54,9 @@
         _btnselectedArray = [NSMutableArray array];
         _currentpoint = CGPointZero;
         _resultString = [NSMutableString string];
+        
+        _settingGestureCallBackBlock = settingSuccess;
+        _athenGestureCallBackBlock = athenSuccess;
         
         [self setupUI];
         [self setupGesture];
@@ -65,13 +70,7 @@
     self.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.8];
     
     //提醒框
-    UILabel *alertlabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 300, 50)];
-    alertlabel.text = @"请再次输入密码";
-    alertlabel.textColor = [UIColor yellowColor];
-    alertlabel.alpha = 0;
-    alertlabel.textAlignment = NSTextAlignmentCenter;
-    [self addSubview:alertlabel];
-    self.alertLabel = alertlabel;
+    [self addSubview:self.alertLabel];
     
     //添加按钮
     for (int index = 0; index < 9; index++) {
@@ -160,9 +159,11 @@
                     [resultString appendString:[NSString stringWithFormat:@"%li",(long)btn.tag]];
                 }
                 
-                if (self.state == GLLockViewStateAuthen) {
+                GLLockViewFunction func = [self.config functionOflockView:self];
+                
+                if (func == GLLockViewFunctionAuthentication) {
                     [self authen:resultString];
-                }else if(self.state == GLLockViewStateAdd)
+                }else if(func == GLLockViewFunctionSettingPassword)
                 {
                     [self addPassword:resultString];
                 }
@@ -193,9 +194,6 @@
     }
 }
 
-/*
- *验证密码，未加密，有需要可以增加md5
- */
 -(void)authen:(NSMutableString *)passWord
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -220,7 +218,7 @@
  */
 -(void)addPassword:(NSMutableString *)passWord
 {
-    if ([self.resultString isEqualToString:@""]) {
+    if ([self.resultString isEqualToString:@""]) {//第一次输入密码
         self.resultString = passWord;
         [UIView animateWithDuration:0.5 animations:^{
             self.alertLabel.text = @"请再次输入密码";
@@ -236,9 +234,9 @@
         return;
     }
     if ([self.resultString isEqualToString:passWord]) {
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        [defaults setObject:passWord forKey:@"password"];
-        [defaults synchronize];
+        if (self.settingGestureCallBackBlock) {
+            self.settingGestureCallBackBlock(self.resultString);
+        }
         
         [UIView animateWithDuration:1 animations:^{
             self.alpha = 0;
@@ -289,5 +287,16 @@
     
 }
 
+#pragma mark - getter
+-(UILabel *)alertLabel {
+    if (!_alertLabel) {
+        _alertLabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 300, 50)];
+        _alertLabel.text = @"请再次输入密码";
+        _alertLabel.textColor = [UIColor yellowColor];
+        _alertLabel.alpha = 0;
+        _alertLabel.textAlignment = NSTextAlignmentCenter;
+    }
+    return _alertLabel;
+}
 @end
 

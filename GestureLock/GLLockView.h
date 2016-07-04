@@ -9,20 +9,10 @@
 #import <UIKit/UIKit.h>
 @class GLLockConfig;
 
-typedef void(^addGestureCallBack)(NSString *gesPsd);
+typedef void(^settingGestureSuccessCallBack)(NSString *gesPsd);
 typedef void(^athenGestureCallBack)(NSString *gesPsd);
 
 @interface GLLockView : UIView
-
-typedef NS_ENUM(NSInteger, GLLockViewState) {
-    
-    GLLockViewStateAdd,//设置密码
-    
-    GLLockViewStateAuthen //验证密码
-    /*
-     *可以继续增添新的模式，根据需求
-     */
-};
 
 typedef NS_ENUM(NSInteger, GLLockLoginState) {
     GLLockLoginStateSuccess,
@@ -30,11 +20,10 @@ typedef NS_ENUM(NSInteger, GLLockLoginState) {
     GLLockLoginStateFailure
 };
 
-
--(instancetype)initWithFrame:(CGRect)frame config:(GLLockConfig *)config;
-
-@property (nonatomic, copy) addGestureCallBack addGestureCallBackBlock;
-@property (nonatomic, copy) athenGestureCallBack athenGestureCallBackBlock;
+-(instancetype)initWithFrame:(CGRect)frame
+                      config:(GLLockConfig *)config
+      settingPasswordSuccess:(settingGestureSuccessCallBack)settingSuccess
+                athenSuccess:(athenGestureCallBack)athenSuccess;
 
 @end
 
