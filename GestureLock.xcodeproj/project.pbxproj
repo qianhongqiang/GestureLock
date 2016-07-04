@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7F1E04621D2A478F00218BE6 /* GLLockConfig.m in Sources */ = {isa = PBXBuildFile; fileRef = 7F1E04611D2A478F00218BE6 /* GLLockConfig.m */; };
 		7FFC8B7319E22276005CFCC1 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7FFC8B7219E22276005CFCC1 /* Foundation.framework */; };
 		7FFC8B7519E22276005CFCC1 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7FFC8B7419E22276005CFCC1 /* CoreGraphics.framework */; };
 		7FFC8B7719E22276005CFCC1 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7FFC8B7619E22276005CFCC1 /* UIKit.framework */; };
@@ -34,6 +35,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		7F1E04601D2A478F00218BE6 /* GLLockConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLLockConfig.h; sourceTree = "<group>"; };
+		7F1E04611D2A478F00218BE6 /* GLLockConfig.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GLLockConfig.m; sourceTree = "<group>"; };
 		7FFC8B6F19E22276005CFCC1 /* GestureLock.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GestureLock.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7FFC8B7219E22276005CFCC1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		7FFC8B7419E22276005CFCC1 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -158,6 +161,8 @@
 			children = (
 				7FFC8BA519E223EA005CFCC1 /* GLLockView.h */,
 				7FFC8BA619E223EA005CFCC1 /* GLLockView.m */,
+				7F1E04601D2A478F00218BE6 /* GLLockConfig.h */,
+				7F1E04611D2A478F00218BE6 /* GLLockConfig.m */,
 			);
 			name = GestureLock;
 			sourceTree = "<group>";
@@ -259,6 +264,7 @@
 			files = (
 				7FFC8B8319E22276005CFCC1 /* AppDelegate.m in Sources */,
 				7FFC8BA419E222F4005CFCC1 /* GLViewController.m in Sources */,
+				7F1E04621D2A478F00218BE6 /* GLLockConfig.m in Sources */,
 				7FFC8BA719E223EA005CFCC1 /* GLLockView.m in Sources */,
 				7FFC8B7F19E22276005CFCC1 /* main.m in Sources */,
 			);

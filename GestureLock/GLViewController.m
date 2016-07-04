@@ -8,6 +8,7 @@
 
 #import "GLViewController.h"
 #import "GLLockView.h"
+#import "GLLockConfig.h"
 
 @interface GLViewController ()
 
@@ -27,7 +28,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    GLLockView *lockView = [[GLLockView alloc] initWithFrame:self.view.bounds PasswordSata:GLLockViewStateAuthen];
+    GLLockView *lockView = [[GLLockView alloc] initWithFrame:self.view.bounds config:[GLLockConfig new]];
     [self.view addSubview:lockView];
     
 }

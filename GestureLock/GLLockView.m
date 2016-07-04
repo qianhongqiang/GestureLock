@@ -7,6 +7,7 @@
 //
 
 #import "GLLockView.h"
+#import "GLLockConfig.h"
 
 #define padding 20
 @interface GLLockView()
@@ -29,64 +30,79 @@
 /*
  *用于验证拼接
  */
-@property (nonatomic, copy) NSMutableString *setPasswordTemp;
+@property (nonatomic, copy) NSMutableString *resultString;
 /*
  *提醒框
  */
 @property (nonatomic, weak) UILabel *alertLabel;
+
+@property (nonatomic, strong) GLLockConfig *config;
 
 @end
 
 
 @implementation GLLockView
 
-- (id)initWithFrame:(CGRect)frame
-{
-    return [self initWithFrame:frame PasswordSata:GLLockViewStateAdd];
-}
 
-
-- (id)initWithFrame:(CGRect)frame PasswordSata:(GLLockViewState)state
+-(instancetype)initWithFrame:(CGRect)frame config:(GLLockConfig *)config
 {
-    self = [super initWithFrame:frame];
-    if (self) {
-        self.state = state;
-        self.loginstate = GLLockLoginStateSuccess;
-        self.btnArray = [NSMutableArray array];
-        self.btnselectedArray = [NSMutableArray array];
-        self.currentpoint = CGPointZero;
-        self.setPasswordTemp = [NSMutableString string];
-        self.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.8];
+    if (self = [super initWithFrame:frame]) {
+        _config = config;
+        _btnArray = [NSMutableArray array];
+        _btnselectedArray = [NSMutableArray array];
+        _currentpoint = CGPointZero;
+        _resultString = [NSMutableString string];
         
-        //提醒框
-        UILabel *alertlabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 300, 50)];
-        alertlabel.text = @"请再次输入密码";
-        alertlabel.textColor = [UIColor yellowColor];
-        alertlabel.alpha = 0;
-        alertlabel.textAlignment = NSTextAlignmentCenter;
-        [self addSubview:alertlabel];
-        self.alertLabel = alertlabel;
-        
-        //添加按钮
-        for (int index = 0; index < 9; index++) {
-            int row = index/3;
-            int col = index%3;
-            float btnrad = (frame.size.width-120)/3;
-            float btnX = padding +(btnrad+2*padding)*col;
-            float btnY = padding +(btnrad+2*padding)*row+(frame.size.height-frame.size.width)/2;
-            float btnW = btnrad;
-            float btnH = btnrad;
-            GLLockButton *passwordBtn = [[GLLockButton alloc] initWithFrame:CGRectMake(btnX, btnY, btnW, btnH)];
-            passwordBtn.tag = index;
-            [self addSubview:passwordBtn];
-            
-            UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(passwordGesture:)];
-            [self addGestureRecognizer:pan];
-            [self.btnArray addObject:passwordBtn];
-            
-        }
+        [self setupUI];
+        [self setupGesture];
     }
     return self;
+}
+
+#pragma mark UI
+-(void)setupUI
+{
+    self.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.8];
+    
+    //提醒框
+    UILabel *alertlabel = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 300, 50)];
+    alertlabel.text = @"请再次输入密码";
+    alertlabel.textColor = [UIColor yellowColor];
+    alertlabel.alpha = 0;
+    alertlabel.textAlignment = NSTextAlignmentCenter;
+    [self addSubview:alertlabel];
+    self.alertLabel = alertlabel;
+    
+    //添加按钮
+    for (int index = 0; index < 9; index++) {
+        int row = index/3;
+        int col = index%3;
+        float btnrad = (self.frame.size.width-120)/3;
+        float btnX = padding +(btnrad+2*padding)*col;
+        float btnY = padding +(btnrad+2*padding)*row+(self.frame.size.height-self.frame.size.width)/2;
+        float btnW = btnrad;
+        float btnH = btnrad;
+        
+        UIButton *passwordBtn = [[UIButton alloc] initWithFrame:CGRectMake(btnX, btnY, btnW, btnH)];
+        
+        UIImage *selectedImage = [self.config lockView:self selectedImageForSingleItemAtRow:row column:col];
+        UIImage *normalImage = [self.config lockView:self normalImageForSingleItemAtRow:row column:col];
+        
+        [passwordBtn setImage:selectedImage forState:UIControlStateSelected];
+        [passwordBtn setImage:normalImage forState:UIControlStateNormal];
+        passwordBtn.tag = index;
+        [self addSubview:passwordBtn];
+        
+        [self.btnArray addObject:passwordBtn];
+        
+    }
+}
+
+#pragma mark - UIPanGestureRecognizer
+-(void)setupGesture
+{
+    UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(passwordGesture:)];
+    [self addGestureRecognizer:pan];
 }
 
 -(void)passwordGesture:(UIPanGestureRecognizer *)pan
@@ -100,7 +116,7 @@
             location = [pan locationInView:self];
             
             for (int index = 0; index < self.btnArray.count; index++) {
-                GLLockButton *btn = (GLLockButton *)[self.btnArray objectAtIndex:index];
+                UIButton *btn = (UIButton *)[self.btnArray objectAtIndex:index];
                 /*
                  *可以调整frame的大小调整手感
                  */
@@ -117,14 +133,14 @@
             location = [pan locationInView:self];
             if (self.btnselectedArray.count > 0) {
                 for (int index = 0; index < self.btnArray.count; index++) {
-                    GLLockButton *btn = (GLLockButton *)[self.btnArray objectAtIndex:index];
+                    UIButton *btn = (UIButton *)[self.btnArray objectAtIndex:index];
                     if (CGRectContainsPoint(btn.frame, location)) {
                         if (![self.btnselectedArray containsObject:btn]) {
                             [self.btnselectedArray addObject:btn];
-                            for (GLLockButton *btn in self.btnArray) {
+                            for (UIButton *btn in self.btnArray) {
                                 btn.selected = NO;
                             }
-                            for (GLLockButton *btn in self.btnselectedArray) {
+                            for (UIButton *btn in self.btnselectedArray) {
                                 btn.selected = YES;
                             }
                         }
@@ -140,7 +156,7 @@
         {
             if (self.btnselectedArray.count > 0) {
                 NSMutableString * resultString=[NSMutableString string];
-                for ( GLLockButton *btn  in self.btnselectedArray){
+                for ( UIButton *btn  in self.btnselectedArray){
                     [resultString appendString:[NSString stringWithFormat:@"%li",(long)btn.tag]];
                 }
                 
@@ -153,7 +169,7 @@
                 if (self.loginstate == GLLockLoginStateSuccess) {
                     self.currentpoint = CGPointZero;
                     [self.btnselectedArray removeAllObjects];
-                    for (GLLockButton *btn in self.btnArray) {
+                    for (UIButton *btn in self.btnArray) {
                         btn.selected = NO;
                     }
                     [self setNeedsDisplay];
@@ -161,7 +177,7 @@
                     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
                         self.currentpoint = CGPointZero;
                         [self.btnselectedArray removeAllObjects];
-                        for (GLLockButton *btn in self.btnArray) {
+                        for (UIButton *btn in self.btnArray) {
                             btn.selected = NO;
                         }
                         [self setNeedsDisplay];
@@ -204,8 +220,8 @@
  */
 -(void)addPassword:(NSMutableString *)passWord
 {
-    if ([self.setPasswordTemp isEqualToString:@""]) {
-        self.setPasswordTemp = passWord;
+    if ([self.resultString isEqualToString:@""]) {
+        self.resultString = passWord;
         [UIView animateWithDuration:0.5 animations:^{
             self.alertLabel.text = @"请再次输入密码";
             self.alertLabel.alpha = 1;
@@ -219,7 +235,7 @@
         }];
         return;
     }
-    if ([self.setPasswordTemp isEqualToString:passWord]) {
+    if ([self.resultString isEqualToString:passWord]) {
         NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
         [defaults setObject:passWord forKey:@"password"];
         [defaults synchronize];
@@ -240,7 +256,7 @@
                 
             }];
         }];
-        self.setPasswordTemp = (NSMutableString *)@"";
+        self.resultString = (NSMutableString *)@"";
     }
 }
 
@@ -256,12 +272,12 @@
     CGContextSetLineJoin(ctx, kCGLineJoinRound);
     for (int index = 0; index < self.btnselectedArray.count; index++) {
         if (index == 0) {
-            GLLockButton *btn = (GLLockButton *)[self.btnselectedArray objectAtIndex:index];
+            UIButton *btn = (UIButton *)[self.btnselectedArray objectAtIndex:index];
             CGContextMoveToPoint(ctx, btn.center.x, btn.center.y);
         } else
         {
             
-            GLLockButton *btn = (GLLockButton *)[self.btnselectedArray objectAtIndex:index];
+            UIButton *btn = (UIButton *)[self.btnselectedArray objectAtIndex:index];
             CGContextAddLineToPoint(ctx, btn.center.x, btn.center.y);
         }
     }
@@ -275,47 +291,3 @@
 
 @end
 
-@implementation GLLockButton
-
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        [self setupUI];
-    }
-    return self;
-}
-
-- (void)setupUI {
-    UIImage *(^normalImage)() = ^UIImage *{
-        UIGraphicsBeginImageContextWithOptions(self.frame.size, NO, [UIScreen mainScreen].scale);
-        CGContextRef ctx = UIGraphicsGetCurrentContext();
-        CGContextSetStrokeColorWithColor(ctx, [UIColor blueColor].CGColor);
-        CGContextSetLineWidth(ctx, 2);
-        CGContextAddEllipseInRect(ctx, self.bounds);
-        CGContextStrokePath(ctx);
-        UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-        return newImage;
-    };
-    
-    UIImage *(^selectedImage)() = ^UIImage *{
-        UIGraphicsBeginImageContextWithOptions(self.frame.size, NO, [UIScreen mainScreen].scale);
-        CGContextRef ctx = UIGraphicsGetCurrentContext();
-        CGContextSetStrokeColorWithColor(ctx, [UIColor blueColor].CGColor);
-        CGContextSetLineWidth(ctx, 2);
-        CGContextAddEllipseInRect(ctx, self.bounds);
-        CGContextStrokePath(ctx);
-        CGContextSetFillColorWithColor(ctx, [UIColor blueColor].CGColor);
-        CGContextAddEllipseInRect(ctx, CGRectMake(self.bounds.size.width * 0.3, self.bounds.size.height * 0.3, self.bounds.size.width * 0.4, self.bounds.size.height * 0.4));
-        CGContextFillPath(ctx);
-        UIImage *newImage = UIGraphicsGetImageFromCurrentImageContext();
-        UIGraphicsEndImageContext();
-        return newImage;
-    };
-    
-    [self setImage:selectedImage() forState:UIControlStateSelected];
-    [self setImage:normalImage() forState:UIControlStateNormal];
-}
-
-@end
