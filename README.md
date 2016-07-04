@@ -1,6 +1,4 @@
 GestureLock
 ===========
 
-A smart Lock , easy to use
-
-以后会完善，增加新功能
+新增GLLockConfig配置类,用于解耦,可以继承默认的config类,根据需要覆盖config的方法
